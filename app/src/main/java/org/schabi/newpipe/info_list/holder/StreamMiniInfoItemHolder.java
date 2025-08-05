@@ -53,6 +53,7 @@ public class StreamMiniInfoItemHolder extends InfoItemHolder {
         final StreamInfoItem item = (StreamInfoItem) infoItem;
 
         itemVideoTitleView.setText(item.getName());
+        itemVideoTitleView.setMaxLines(5);
         itemUploaderView.setText(item.getUploaderName());
 
         if (item.getDuration() > 0) {

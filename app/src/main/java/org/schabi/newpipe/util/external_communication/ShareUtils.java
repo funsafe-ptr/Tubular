@@ -252,7 +252,7 @@ public final class ShareUtils {
         // If loading of images has been disabled, don't try to generate a content preview
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
                 && !TextUtils.isEmpty(imagePreviewUrl)
-                && ImageStrategy.shouldLoadImages()) {
+                && /*ImageStrategy.shouldLoadImages()*/false) {
 
             final ClipData clipData = generateClipDataForImagePreview(context, imagePreviewUrl);
             if (clipData != null) {

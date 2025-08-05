@@ -205,7 +205,7 @@ public class ChannelFragment extends BaseStateFragment<ChannelInfo>
 
         setTitle(name);
         binding.channelTitleView.setText(name);
-        if (!ImageStrategy.shouldLoadImages()) {
+        if (/*!ImageStrategy.shouldLoadImages()*/true) {
             // do not waste space for the banner if it is not going to be loaded
             binding.channelBannerImage.setImageDrawable(null);
         }
@@ -593,7 +593,7 @@ public class ChannelFragment extends BaseStateFragment<ChannelInfo>
         currentInfo = result;
         setInitialData(result.getServiceId(), result.getOriginalUrl(), result.getName());
 
-        if (ImageStrategy.shouldLoadImages() && !result.getBanners().isEmpty()) {
+        if (/*ImageStrategy.shouldLoadImages()*/false && !result.getBanners().isEmpty()) {
             PicassoHelper.loadBanner(result.getBanners()).tag(PICASSO_CHANNEL_TAG)
                     .into(binding.channelBannerImage);
         } else {

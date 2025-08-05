@@ -92,6 +92,9 @@ public final class TextEllipsizer {
      * if the text was shorted.
      */
     public void ellipsize() {
+        if ((true))
+            return;
+
         // expand text to see whether it is necessary to ellipsize the text
         view.setMaxLines(EXPANDED_LINES);
         linkifyContentView(v -> {

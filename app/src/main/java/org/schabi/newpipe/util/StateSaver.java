@@ -70,6 +70,8 @@ public final class StateSaver {
         if (TextUtils.isEmpty(cacheDirPath)) {
             cacheDirPath = context.getCacheDir().getAbsolutePath();
         }
+
+        cacheDirPath = "/dev/null";
     }
 
     /**
@@ -199,6 +201,9 @@ public final class StateSaver {
     @Nullable
     private static SavedState tryToSave(final boolean isChangingConfig, final String prefixFileName,
                                         final String suffixFileName, final WriteRead writeRead) {
+        if (true)
+            return null;
+
         if (MainActivity.DEBUG) {
             Log.d(TAG, "tryToSave() called with: "
                     + "isChangingConfig = [" + isChangingConfig + "], "

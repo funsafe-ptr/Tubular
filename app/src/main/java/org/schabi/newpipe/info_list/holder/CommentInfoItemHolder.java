@@ -90,7 +90,7 @@ public class CommentInfoItemHolder extends InfoItemHolder {
 
         // load the author avatar
         PicassoHelper.loadAvatar(item.getUploaderAvatars()).into(itemThumbnailView);
-        if (ImageStrategy.shouldLoadImages()) {
+        if (/*ImageStrategy.shouldLoadImages()*/false) {
             itemThumbnailView.setVisibility(View.VISIBLE);
             itemRoot.setPadding(commentVerticalPadding, commentVerticalPadding,
                     commentVerticalPadding, commentVerticalPadding);
@@ -130,7 +130,7 @@ public class CommentInfoItemHolder extends InfoItemHolder {
         textEllipsizer.setStreamingService(getServiceById(item.getServiceId()));
         textEllipsizer.setStreamUrl(item.getUrl());
         textEllipsizer.setContent(item.getCommentText());
-        textEllipsizer.ellipsize();
+        // textEllipsizer.ellipsize();
 
         //noinspection ClickableViewAccessibility
         itemContentView.setOnTouchListener((v, event) -> {
@@ -155,10 +155,11 @@ public class CommentInfoItemHolder extends InfoItemHolder {
         });
 
         itemView.setOnClickListener(view -> {
-            textEllipsizer.toggle();
-            if (itemBuilder.getOnCommentsSelectedListener() != null) {
-                itemBuilder.getOnCommentsSelectedListener().selected(item);
-            }
+            openCommentAuthor(item);
+            // textEllipsizer.toggle();
+            // if (itemBuilder.getOnCommentsSelectedListener() != null) {
+            //     itemBuilder.getOnCommentsSelectedListener().selected(item);
+            // }
         });
 
         itemView.setOnLongClickListener(view -> {

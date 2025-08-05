@@ -16,8 +16,8 @@ android {
     namespace 'org.schabi.newpipe'
 
     defaultConfig {
-        applicationId "org.polymorphicshade.tubular"
-        resValue "string", "app_name", "Tubular"
+        applicationId "org.polymorphicshade.tubularfork"
+        resValue "string", "app_name", "TubularFork"
         minSdk 21
         targetSdk 33
         if (System.properties.containsKey('versionCodeOverride')) {
@@ -64,7 +64,8 @@ android {
                 archivesBaseName = 'Tubular_' + System.getProperty('packageSuffix')
             }
             minifyEnabled true
-            shrinkResources false // disabled to fix F-Droid's reproducible build
+            // shrinkResources false // disabled to fix F-Droid's reproducible build
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             archivesBaseName = 'app'
         }

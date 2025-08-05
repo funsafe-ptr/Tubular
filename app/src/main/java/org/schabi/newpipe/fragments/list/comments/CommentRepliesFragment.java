@@ -85,7 +85,7 @@ public final class CommentRepliesFragment
 
             // load the author avatar
             PicassoHelper.loadAvatar(item.getUploaderAvatars()).into(binding.authorAvatar);
-            binding.authorAvatar.setVisibility(ImageStrategy.shouldLoadImages()
+            binding.authorAvatar.setVisibility(/*ImageStrategy.shouldLoadImages()*/true // must true for comment padding.
                     ? View.VISIBLE : View.GONE);
 
             // setup author name and comment date

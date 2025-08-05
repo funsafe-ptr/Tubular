@@ -50,7 +50,7 @@ public class PlayerDataSource {
      * {@link YoutubeProgressiveDashManifestCreator}, {@link YoutubeOtfDashManifestCreator} and
      * {@link YoutubePostLiveStreamDvrDashManifestCreator}.
      */
-    private static final int MAX_MANIFEST_CACHE_SIZE = 500;
+    private static final int MAX_MANIFEST_CACHE_SIZE = 500 * 2;
 
     /**
      * The folder name in which the ExoPlayer cache will be written.
@@ -69,13 +69,16 @@ public class PlayerDataSource {
 
     // Generic Data Source Factories (without or with cache)
     private final DataSource.Factory cachelessDataSourceFactory;
-    private final CacheFactory cacheDataSourceFactory;
+    // private final CacheFactory cacheDataSourceFactory;
 
     // YouTube-specific Data Source Factories (with cache)
     // They use YoutubeHttpDataSource.Factory, with different parameters each
-    private final CacheFactory ytHlsCacheDataSourceFactory;
-    private final CacheFactory ytDashCacheDataSourceFactory;
-    private final CacheFactory ytProgressiveDashCacheDataSourceFactory;
+    // private final CacheFactory ytHlsCacheDataSourceFactory;
+    // private final CacheFactory ytDashCacheDataSourceFactory;
+    // private final CacheFactory ytProgressiveDashCacheDataSourceFactory;
+    private final DataSource.Factory ytHlsCacheDataSourceFactory;
+    private final DataSource.Factory ytDashCacheDataSourceFactory;
+    private final DataSource.Factory ytProgressiveDashCacheDataSourceFactory;
 
 
     public PlayerDataSource(final Context context,
@@ -90,16 +93,22 @@ public class PlayerDataSource {
         cachelessDataSourceFactory = new DefaultDataSource.Factory(context,
                 new DefaultHttpDataSource.Factory().setUserAgent(DownloaderImpl.USER_AGENT))
                 .setTransferListener(transferListener);
-        cacheDataSourceFactory = new CacheFactory(context, transferListener, cache,
-                new DefaultHttpDataSource.Factory().setUserAgent(DownloaderImpl.USER_AGENT));
+        // cacheDataSourceFactory = new CacheFactory(context, transferListener, cache,
+        //         new DefaultHttpDataSource.Factory().setUserAgent(DownloaderImpl.USER_AGENT));
 
         // YouTube-specific data source factories use getYoutubeHttpDataSourceFactory()
-        ytHlsCacheDataSourceFactory = new CacheFactory(context, transferListener, cache,
-                getYoutubeHttpDataSourceFactory(false, false));
-        ytDashCacheDataSourceFactory = new CacheFactory(context, transferListener, cache,
-                getYoutubeHttpDataSourceFactory(true, true));
-        ytProgressiveDashCacheDataSourceFactory = new CacheFactory(context, transferListener, cache,
-                getYoutubeHttpDataSourceFactory(false, true));
+        // ytHlsCacheDataSourceFactory = new CacheFactory(context, transferListener, cache,
+        //         getYoutubeHttpDataSourceFactory(false, false));
+        // ytDashCacheDataSourceFactory = new CacheFactory(context, transferListener, cache,
+        //         getYoutubeHttpDataSourceFactory(true, true));
+        // ytProgressiveDashCacheDataSourceFactory = new CacheFactory(context, transferListener, cache,
+        //         getYoutubeHttpDataSourceFactory(false, true));
+        ytHlsCacheDataSourceFactory = new DefaultDataSource.Factory(context,
+                getYoutubeHttpDataSourceFactory(false, false)).setTransferListener(transferListener);
+        ytDashCacheDataSourceFactory = new DefaultDataSource.Factory(context,
+                getYoutubeHttpDataSourceFactory(true, true)).setTransferListener(transferListener);
+        ytProgressiveDashCacheDataSourceFactory = new DefaultDataSource.Factory(context,
+                getYoutubeHttpDataSourceFactory(false, true)).setTransferListener(transferListener);
 
         // set the maximum size to manifest creators
         YoutubeProgressiveDashManifestCreator.getCache().setMaximumSize(MAX_MANIFEST_CACHE_SIZE);
@@ -136,21 +145,21 @@ public class PlayerDataSource {
     public HlsMediaSource.Factory getHlsMediaSourceFactory(
             @Nullable final NonUriHlsDataSourceFactory.Builder hlsDataSourceFactoryBuilder) {
         if (hlsDataSourceFactoryBuilder != null) {
-            hlsDataSourceFactoryBuilder.setDataSourceFactory(cacheDataSourceFactory);
+            hlsDataSourceFactoryBuilder.setDataSourceFactory(/*cacheDataSourceFactory*/cachelessDataSourceFactory);
             return new HlsMediaSource.Factory(hlsDataSourceFactoryBuilder.build());
         }
 
-        return new HlsMediaSource.Factory(cacheDataSourceFactory);
+        return new HlsMediaSource.Factory(/*cacheDataSourceFactory*/cachelessDataSourceFactory);
     }
 
     public DashMediaSource.Factory getDashMediaSourceFactory() {
         return new DashMediaSource.Factory(
-                getDefaultDashChunkSourceFactory(cacheDataSourceFactory),
-                cacheDataSourceFactory);
+                getDefaultDashChunkSourceFactory(/*cacheDataSourceFactory*/cachelessDataSourceFactory),
+                /*cacheDataSourceFactory*/cachelessDataSourceFactory);
     }
 
     public ProgressiveMediaSource.Factory getProgressiveMediaSourceFactory() {
-        return new ProgressiveMediaSource.Factory(cacheDataSourceFactory)
+        return new ProgressiveMediaSource.Factory(/*cacheDataSourceFactory*/cachelessDataSourceFactory)
                 .setContinueLoadingCheckIntervalBytes(progressiveLoadIntervalBytes);
     }
 
@@ -161,7 +170,7 @@ public class PlayerDataSource {
     }
 
     public SingleSampleMediaSource.Factory getSingleSampleMediaSourceFactory() {
-        return new SingleSampleMediaSource.Factory(cacheDataSourceFactory);
+        return new SingleSampleMediaSource.Factory(/*cacheDataSourceFactory*/cachelessDataSourceFactory);
     }
     //endregion
 
@@ -200,7 +209,7 @@ public class PlayerDataSource {
 
     private static void instantiateCacheIfNeeded(final Context context) {
         if (cache == null) {
-            final File cacheDir = new File(context.getExternalCacheDir(), CACHE_FOLDER_NAME);
+            final File cacheDir = new File(/*context.getExternalCacheDir()*/"/dev/null", CACHE_FOLDER_NAME);
             if (DEBUG) {
                 Log.d(TAG, "instantiateCacheIfNeeded: cacheDir = " + cacheDir.getAbsolutePath());
             }

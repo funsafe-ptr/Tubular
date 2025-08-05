@@ -14,18 +14,6 @@ on:
       - '.github/**/*.md'
       - '.github/FUNDING.yml'
       - '.github/ISSUE_TEMPLATE/**'
-  push:
-    branches:
-      - dev
-      - master
-    paths-ignore:
-      - 'README.md'
-      - 'doc/**'
-      - 'fastlane/**'
-      - 'assets/**'
-      - '.github/**/*.md'
-      - '.github/FUNDING.yml'
-      - '.github/ISSUE_TEMPLATE/**'
 
 jobs:
   build:

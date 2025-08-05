@@ -612,7 +612,7 @@ public class PlaybackParameterDialog extends DialogFragment {
     }
 
     public static float getMinPitchOrSpeed() {
-        return (float) MIN_PITCH_OR_SPEED;
+        return (float) /*MIN_PITCH_OR_SPEED*/1.0f;
     }
 
     public static float getMaxPitchOrSpeed(final Context context) {

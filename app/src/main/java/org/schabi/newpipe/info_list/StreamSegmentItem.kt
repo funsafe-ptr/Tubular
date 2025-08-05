@@ -33,7 +33,7 @@ class StreamSegmentItem(
             // and thus the segment title needs to be only one line height.
             // But when there is no channel name displayed, the title can be two lines long.
             // The default maxLines value is set to 1 to display all elements in the AS preview,
-            viewHolder.root.findViewById<TextView>(R.id.textViewTitle).maxLines = 2
+            viewHolder.root.findViewById<TextView>(R.id.textViewTitle).maxLines = 4
         } else {
             viewHolder.root.findViewById<TextView>(R.id.textViewChannel).text = item.channelName
             viewHolder.root.findViewById<TextView>(R.id.textViewChannel).visibility = View.VISIBLE

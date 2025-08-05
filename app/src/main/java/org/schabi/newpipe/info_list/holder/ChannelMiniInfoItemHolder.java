@@ -46,6 +46,7 @@ public class ChannelMiniInfoItemHolder extends InfoItemHolder {
         final ChannelInfoItem item = (ChannelInfoItem) infoItem;
 
         itemTitleView.setText(item.getName());
+        itemTitleView.setMaxLines(5);
         itemTitleView.setSelected(true);
 
         final String detailLine = getDetailLine(item);
@@ -93,7 +94,7 @@ public class ChannelMiniInfoItemHolder extends InfoItemHolder {
      * @return max line count
      */
     protected int getDescriptionMaxLineCount(@Nullable final String content) {
-        return content == null ? 3 : 2;
+        return content == null ? 6 : 5;
     }
 
     @Nullable

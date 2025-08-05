@@ -42,6 +42,7 @@ public class PlaylistMiniInfoItemHolder extends InfoItemHolder {
         final PlaylistInfoItem item = (PlaylistInfoItem) infoItem;
 
         itemTitleView.setText(item.getName());
+        itemTitleView.setMaxLines(5);
         itemStreamCountView.setText(Localization
                 .localizeStreamCountMini(itemStreamCountView.getContext(), item.getStreamCount()));
         itemUploaderView.setText(item.getUploaderName());

@@ -80,6 +80,8 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.MappingTrackSelector;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.video.VideoSize;
+import android.media.audiofx.LoudnessEnhancer;
+
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -209,6 +211,7 @@ public final class Player implements PlaybackListener, Listener {
 
     private ExoPlayer simpleExoPlayer;
     private AudioReactor audioReactor;
+    private LoudnessEnhancer loudnessEnhancer;
 
     @NonNull
     private final DefaultTrackSelector trackSelector;
@@ -552,7 +555,7 @@ public final class Player implements PlaybackListener, Listener {
         destroyPlayer();
         initPlayer(playOnReady);
         setRepeatMode(repeatMode);
-        setPlaybackParameters(playbackSpeed, playbackPitch, playbackSkipSilence);
+        setPlaybackParameters(/*playbackSpeed*/1.0f, playbackPitch, playbackSkipSilence);
 
         playQueue = queue;
         playQueue.init();
@@ -581,6 +584,20 @@ public final class Player implements PlaybackListener, Listener {
         simpleExoPlayer.setHandleAudioBecomingNoisy(true);
 
         audioReactor = new AudioReactor(context, simpleExoPlayer);
+
+        simpleExoPlayer.addListener(new com.google.android.exoplayer2.Player.Listener() {
+            @Override
+            public void onRenderedFirstFrame() {
+                if (simpleExoPlayer != null && loudnessEnhancer == null) {
+                    int audioSessionId = simpleExoPlayer.getAudioSessionId();
+                    if (audioSessionId != C.AUDIO_SESSION_ID_UNSET) {
+                        loudnessEnhancer = new LoudnessEnhancer(audioSessionId);
+                        loudnessEnhancer.setTargetGain(7000); // Gain in millibels (1000 = +10dB)
+                        loudnessEnhancer.setEnabled(true);
+                    }
+                }
+            }
+        });
 
         registerBroadcastReceiver();
 
@@ -622,6 +639,10 @@ public final class Player implements PlaybackListener, Listener {
         }
         if (audioReactor != null) {
             audioReactor.dispose();
+        }
+        if (loudnessEnhancer != null) {
+            loudnessEnhancer.release();
+            loudnessEnhancer = null;
         }
         if (playQueueManager != null) {
             playQueueManager.dispose();

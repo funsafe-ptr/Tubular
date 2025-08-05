@@ -48,10 +48,13 @@ public final class PicassoHelper {
 
 
     public static void init(final Context context) {
-        picassoCache = new LruCache(10 * 1024 * 1024);
+        picassoCache = new LruCache(25 * 1024 * 1024);
         picassoDownloaderClient = new OkHttpClient.Builder()
-                .cache(new okhttp3.Cache(new File(context.getExternalCacheDir(), "picasso"),
-                        50L * 1024L * 1024L))
+                // .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                // .networkPolicy(NetworkPolicy.NO_CACHE, NetworkPolicy.NO_STORE)
+                // .addInterceptor(new PicassoHelper.CustomCacheInterceptor())
+                // .cache(new okhttp3.Cache(new File(context.getExternalCacheDir(), "picasso"),
+                //         20L * 1024L * 1024L))
                 // this should already be the default timeout in OkHttp3, but just to be sure...
                 .callTimeout(15, TimeUnit.SECONDS)
                 .build();
@@ -93,11 +96,13 @@ public final class PicassoHelper {
 
 
     public static RequestCreator loadAvatar(@NonNull final List<Image> images) {
-        return loadImageDefault(images, R.drawable.placeholder_person);
+        return loadImagePlaceholder(R.drawable.placeholder_person);
+        // return loadImageDefault(images, R.drawable.placeholder_person);
     }
 
     public static RequestCreator loadAvatar(@Nullable final String url) {
-        return loadImageDefault(url, R.drawable.placeholder_person);
+        return loadImagePlaceholder(R.drawable.placeholder_person);
+        // return loadImageDefault(url, R.drawable.placeholder_person);
     }
 
     public static RequestCreator loadThumbnail(@NonNull final List<Image> images) {
@@ -114,7 +119,8 @@ public final class PicassoHelper {
     }
 
     public static RequestCreator loadBanner(@NonNull final List<Image> images) {
-        return loadImageDefault(images, R.drawable.placeholder_channel_banner);
+        return loadImagePlaceholder(R.drawable.placeholder_channel_banner);
+        // return loadImageDefault(images, R.drawable.placeholder_channel_banner);
     }
 
     public static RequestCreator loadPlaylistThumbnail(@NonNull final List<Image> images) {
@@ -130,7 +136,8 @@ public final class PicassoHelper {
     }
 
     public static RequestCreator loadNotificationIcon(@Nullable final String url) {
-        return loadImageDefault(url, R.drawable.ic_tubular_white);
+        return loadImagePlaceholder(R.drawable.ic_tubular_white);
+        // return loadImageDefault(url, R.drawable.ic_tubular_white);
     }
 
 
@@ -200,6 +207,13 @@ public final class PicassoHelper {
         return loadImageDefault(url, placeholderResId, true);
     }
 
+    private static RequestCreator loadImagePlaceholder(@DrawableRes final int placeholderResId) {
+        return picassoInstance
+                .load((String) null);
+                // .placeholder(placeholderResId) // show placeholder when no image should load
+                // .error(placeholderResId);
+    }
+
     private static RequestCreator loadImageDefault(@Nullable final String url,
                                                    @DrawableRes final int placeholderResId,
                                                    final boolean showPlaceholderWhileLoading) {
@@ -208,16 +222,16 @@ public final class PicassoHelper {
         // for URLs stored in the database)
         if (isNullOrEmpty(url) || !ImageStrategy.shouldLoadImages()) {
             return picassoInstance
-                    .load((String) null)
-                    .placeholder(placeholderResId) // show placeholder when no image should load
-                    .error(placeholderResId);
+                    .load((String) null);
+                    // .placeholder(placeholderResId) // show placeholder when no image should load
+                    // .error(placeholderResId);
         } else {
             final RequestCreator requestCreator = picassoInstance
-                    .load(url)
-                    .error(placeholderResId);
-            if (showPlaceholderWhileLoading) {
-                requestCreator.placeholder(placeholderResId);
-            }
+                    .load(url);
+            //         .error(placeholderResId);
+            // if (showPlaceholderWhileLoading) {
+            //     requestCreator.placeholder(placeholderResId);
+            // }
             return requestCreator;
         }
     }

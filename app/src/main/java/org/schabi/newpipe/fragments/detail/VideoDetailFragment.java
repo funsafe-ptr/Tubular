@@ -499,7 +499,8 @@ public final class VideoDetailFragment
     //////////////////////////////////////////////////////////////////////////*/
 
     private void setOnClickListeners() {
-        binding.detailTitleRootLayout.setOnClickListener(v -> toggleTitleAndSecondaryControls());
+        // toggleTitleAndSecondaryControls();
+        // binding.detailTitleRootLayout.setOnClickListener(v -> toggleTitleAndSecondaryControls());
         binding.detailUploaderRootLayout.setOnClickListener(makeOnClickListener(info -> {
             if (isEmpty(info.getSubChannelUrl())) {
                 if (!isEmpty(info.getUploaderUrl())) {
@@ -572,12 +573,18 @@ public final class VideoDetailFragment
                 player.playPause();
                 player.UIs().get(VideoPlayerUi.class).ifPresent(ui -> ui.hideControls(0, 0));
                 showSystemUi();
+                restoreDefaultBrightness();
             } else {
                 autoPlayEnabled = true; // forcefully start playing
                 openVideoPlayer(false);
             }
 
             setOverlayPlayPauseImage(isPlayerAvailable() && player.isPlaying());
+
+            if (!(isPlayerAvailable() && player.isPlaying())) {
+                restoreDefaultOrientation();
+                setAutoPlay(false);
+            }
         });
     }
 
@@ -642,7 +649,7 @@ public final class VideoDetailFragment
                     VideoPlayerUi.DEFAULT_CONTROLS_DURATION, 180);
             binding.detailSecondaryControlPanel.setVisibility(View.VISIBLE);
         } else {
-            binding.detailVideoTitleView.setMaxLines(1);
+            binding.detailVideoTitleView.setMaxLines(10);
             animateRotation(binding.detailToggleSecondaryControlsView,
                     VideoPlayerUi.DEFAULT_CONTROLS_DURATION, 0);
             binding.detailSecondaryControlPanel.setVisibility(View.GONE);
@@ -1536,12 +1543,13 @@ public final class VideoDetailFragment
         binding.positionView.setVisibility(View.GONE);
 
         binding.detailVideoTitleView.setText(title);
-        binding.detailVideoTitleView.setMaxLines(1);
+        binding.detailVideoTitleView.setMaxLines(10);
         animate(binding.detailVideoTitleView, true, 0);
 
         binding.detailToggleSecondaryControlsView.setVisibility(View.GONE);
         binding.detailTitleRootLayout.setClickable(false);
-        binding.detailSecondaryControlPanel.setVisibility(View.GONE);
+        // binding.detailSecondaryControlPanel.setVisibility(View.GONE);
+        binding.detailSecondaryControlPanel.setVisibility(View.VISIBLE);
 
         if (binding.relatedItemsLayout != null) {
             if (showRelatedItems) {
@@ -1688,7 +1696,8 @@ public final class VideoDetailFragment
         binding.detailTitleRootLayout.setClickable(true);
         binding.detailToggleSecondaryControlsView.setRotation(0);
         binding.detailToggleSecondaryControlsView.setVisibility(View.VISIBLE);
-        binding.detailSecondaryControlPanel.setVisibility(View.GONE);
+        // binding.detailSecondaryControlPanel.setVisibility(View.GONE);
+        binding.detailSecondaryControlPanel.setVisibility(View.VISIBLE);
 
         checkUpdateProgressInfo(info);
         PicassoHelper.loadDetailsThumbnail(info.getThumbnails()).tag(PICASSO_VIDEO_DETAILS_TAG)

@@ -98,8 +98,8 @@ public abstract class VideoPlayerUi extends PlayerUi implements SeekBar.OnSeekBa
 
     // time constants
     public static final long DEFAULT_CONTROLS_DURATION = 300; // 300 millis
-    public static final long DEFAULT_CONTROLS_HIDE_TIME = 2000;  // 2 Seconds
-    public static final long DPAD_CONTROLS_HIDE_TIME = 7000;  // 7 Seconds
+    public static final long DEFAULT_CONTROLS_HIDE_TIME = 2000 + 999999999;  // 2 Seconds
+    public static final long DPAD_CONTROLS_HIDE_TIME = 7000 + 999999999;  // 7 Seconds
     public static final int SEEK_OVERLAY_DURATION = 450; // 450 millis
 
     // other constants (TODO remove playback speeds and use normal menu for popup, too)
@@ -1059,6 +1059,7 @@ public abstract class VideoPlayerUi extends PlayerUi implements SeekBar.OnSeekBa
         updateStreamRelatedViews();
 
         binding.titleTextView.setText(info.getName());
+        binding.titleTextView.setMaxLines(5);
         binding.channelTextView.setText(info.getUploaderName());
 
         this.seekbarPreviewThumbnailHolder.resetFrom(player.getContext(), info.getPreviewFrames());
@@ -1212,8 +1213,8 @@ public abstract class VideoPlayerUi extends PlayerUi implements SeekBar.OnSeekBa
                 player.getTrackSelector().setParameters(player.getTrackSelector()
                         .buildUponParameters().setRendererDisabled(textRendererIndex, true));
             }
-            player.getPrefs().edit()
-                    .remove(context.getString(R.string.caption_user_set_key)).apply();
+            // player.getPrefs().edit()
+            //         .remove(context.getString(R.string.caption_user_set_key)).apply();
             return true;
         });
 
